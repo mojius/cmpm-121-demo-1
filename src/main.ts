@@ -31,6 +31,12 @@ app.append(mainButton);
 
 app.append(decibelLevel);
 
+// Increment gradually
+setInterval(function () {
+  masterCounter += 0.0001;
+  decibelLevel.textContent = getDecibelText();
+}, 4000);
+
 function onClicked() {
   masterCounter += baseClickIncrease;
   decibelLevel.textContent = getDecibelText();
