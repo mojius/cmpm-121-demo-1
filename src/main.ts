@@ -2,6 +2,9 @@ import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
+let masterCounter: number = 0;
+const baseClickIncrease: number = 0.01;
+
 const gameName = "Noisemaker";
 
 document.title = gameName;
@@ -19,4 +22,20 @@ mainButton.type = "button";
 mainButton.className = "buttonStyle";
 mainButton.textContent = "🔊⬆";
 
+const decibelLevel: HTMLDivElement = document.createElement("div");
+decibelLevel.textContent = getDecibelText();
+
+mainButton.addEventListener("click", onClicked);
+
 app.append(mainButton);
+
+app.append(decibelLevel);
+
+function onClicked() {
+  masterCounter += baseClickIncrease;
+  decibelLevel.textContent = getDecibelText();
+}
+
+function getDecibelText(): string {
+  return `(${masterCounter.toPrecision(2)} decibels)`;
+}
