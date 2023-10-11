@@ -3,6 +3,8 @@ import "./style.css";
 const app: HTMLDivElement = document.querySelector("#app")!;
 
 let masterCounter: number = 0;
+
+const decibelsPerSecond: number = 1;
 const baseClickIncrease: number = 0.01;
 
 const gameName = "Noisemaker";
@@ -31,11 +33,7 @@ app.append(mainButton);
 
 app.append(decibelLevel);
 
-// Increment gradually
-setInterval(function () {
-  masterCounter += 0.0001;
-  decibelLevel.textContent = getDecibelText();
-}, 4000);
+startAutoDecibelIncrease();
 
 function onClicked() {
   masterCounter += baseClickIncrease;
@@ -44,4 +42,23 @@ function onClicked() {
 
 function getDecibelText(): string {
   return `(${masterCounter.toPrecision(2)} decibels)`;
+}
+
+// Starts the automatic increase of decibel levels.
+function startAutoDecibelIncrease() {
+  let previousFrameTime = performance.now();
+  window.requestAnimationFrame(checkForCounterUpdate);
+
+  function checkForCounterUpdate() {
+    const msPerFrameUpdate = 1000 / decibelsPerSecond;
+
+    // This way we only update the counter once it's passed that threshold.
+    if (performance.now() - previousFrameTime > msPerFrameUpdate) {
+      masterCounter += 1;
+      decibelLevel.textContent = getDecibelText();
+
+      previousFrameTime = performance.now();
+    }
+    window.requestAnimationFrame(checkForCounterUpdate);
+  }
 }
