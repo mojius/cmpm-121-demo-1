@@ -2,6 +2,7 @@ import "./style.css";
 
 interface Item {
   name: string;
+  desc: string;
   emoji: string;
   button: HTMLButtonElement;
   cost: number;
@@ -12,6 +13,7 @@ interface Item {
 const items: Item[] = [
   {
     name: "clock",
+    desc: "Tick, tock. The smallest amount of noise that can be annoying.",
     emoji: "⏰",
     button: document.createElement("button"),
     cost: 10,
@@ -20,6 +22,7 @@ const items: Item[] = [
   },
   {
     name: "pen",
+    desc: "click click click click",
     emoji: "🖊",
     button: document.createElement("button"),
     cost: 100,
@@ -28,10 +31,29 @@ const items: Item[] = [
   },
   {
     name: "bell",
+    desc: "Could even be the ringtone on someone's phone.",
     emoji: "🔔",
     button: document.createElement("button"),
     cost: 1000,
     rate: 50,
+    amount: 0,
+  },
+  {
+    name: "horn",
+    desc: "You shall not... brass!!",
+    emoji: "📯",
+    button: document.createElement("button"),
+    cost: 5000,
+    rate: 200,
+    amount: 0,
+  },
+  {
+    name: "shotgun",
+    desc: "There's a reason it's called a boomstick. Don't worry, no one's gonna get hurt. We're just shooting huge, extremely loud glass panes.",
+    emoji: "🔫",
+    button: document.createElement("button"),
+    cost: 10000,
+    rate: 1000,
     amount: 0,
   },
 ];
@@ -76,8 +98,8 @@ app.append(mainButton);
 
 const div = document.createElement("div");
 app.append(div);
-createItemButtons(items);
 app.append(dpsText);
+createItemButtons(items);
 
 startAutoDecibelIncrease();
 
@@ -126,7 +148,12 @@ function createItemButtons(items: Item[]) {
       onUpgradeClicked(currentValue);
     });
     div.appendChild(currentValue.button);
-    div.append(document.createElement("div"));
+    div.appendChild(document.createElement("div"));
+
+    const subText = document.createElement("p");
+    subText.classList.add("desc");
+    subText.textContent = currentValue.desc;
+    div.appendChild(subText);
   });
 }
 
