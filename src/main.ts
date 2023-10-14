@@ -29,24 +29,24 @@ const mainButton: HTMLButtonElement = document.createElement("button"); // Look 
 mainButton.className = "mainButton";
 mainButton.type = "button";
 mainButton.className = "buttonStyle";
-mainButton.textContent = "🔊⬆";
+mainButton.textContent = "Make some noise!🔊⬆";
 
 const upgradeButtonA: HTMLButtonElement = document.createElement("button");
 upgradeButtonA.type = "button";
 upgradeButtonA.disabled = true;
-upgradeButtonA.textContent = `Buy a clock (${item.A}): ${currentUpgradeCost[0]} decibels`;
+upgradeButtonA.textContent = `Buy a clock 🕰 (${item.A}): ${currentUpgradeCost[0]} decibels`;
 upgradeButtonA.addEventListener("click", onUpgradeClickedA);
 
 const upgradeButtonB: HTMLButtonElement = document.createElement("button");
 upgradeButtonB.type = "button";
 upgradeButtonB.disabled = true;
-upgradeButtonB.textContent = `Buy a pen (${item.B}): ${currentUpgradeCost[1]} decibels`;
+upgradeButtonB.textContent = `Buy a pen 🖊 (${item.B}): ${currentUpgradeCost[1]} decibels`;
 upgradeButtonB.addEventListener("click", onUpgradeClickedB);
 
 const upgradeButtonC: HTMLButtonElement = document.createElement("button");
 upgradeButtonC.type = "button";
 upgradeButtonC.disabled = true;
-upgradeButtonC.textContent = `Buy a bell (${item.C}): ${currentUpgradeCost[2]} decibels`;
+upgradeButtonC.textContent = `Buy a bell 🔔 (${item.C}): ${currentUpgradeCost[2]} decibels`;
 upgradeButtonC.addEventListener("click", onUpgradeClickedC);
 
 const decibelLevel: HTMLDivElement = document.createElement("div");
@@ -87,7 +87,7 @@ function onUpgradeClickedA() {
     masterCounter -= currentUpgradeCost[0];
     decibelsPerSecond += 0.1;
     currentUpgradeCost[0] *= 1.15;
-    upgradeButtonA.textContent = `Buy a clock (${
+    upgradeButtonA.textContent = `Buy a clock 🕰 (${
       item.A
     }): ${currentUpgradeCost[0].toFixed(2)} decibels`;
   }
@@ -99,7 +99,7 @@ function onUpgradeClickedB() {
     masterCounter -= currentUpgradeCost[1];
     decibelsPerSecond += 2;
     currentUpgradeCost[1] *= 1.15;
-    upgradeButtonB.textContent = `Buy a pen (${
+    upgradeButtonB.textContent = `Buy a pen 🖊 (${
       item.B
     }): ${currentUpgradeCost[1].toFixed(2)} decibels`;
   }
@@ -111,7 +111,7 @@ function onUpgradeClickedC() {
     masterCounter -= currentUpgradeCost[2];
     decibelsPerSecond += 50;
     currentUpgradeCost[2] *= 1.15;
-    upgradeButtonC.textContent = `Buy a bell (${
+    upgradeButtonC.textContent = `Buy a bell 🔔 (${
       item.C
     }): ${currentUpgradeCost[2].toFixed(2)} decibels`;
   }
