@@ -86,7 +86,7 @@ function onUpgradeClickedA() {
     item.A += 1;
     masterCounter -= currentUpgradeCost[0];
     decibelsPerSecond += 0.1;
-    currentUpgradeCost[0] *= 1.2;
+    currentUpgradeCost[0] *= 1.15;
     upgradeButtonA.textContent = `Buy a clock (${
       item.A
     }): ${currentUpgradeCost[0].toFixed(2)} decibels`;
@@ -98,7 +98,7 @@ function onUpgradeClickedB() {
     item.B += 1;
     masterCounter -= currentUpgradeCost[1];
     decibelsPerSecond += 2;
-    currentUpgradeCost[0] *= 1.2;
+    currentUpgradeCost[1] *= 1.15;
     upgradeButtonB.textContent = `Buy a pen (${
       item.B
     }): ${currentUpgradeCost[1].toFixed(2)} decibels`;
@@ -110,7 +110,7 @@ function onUpgradeClickedC() {
     item.C += 1;
     masterCounter -= currentUpgradeCost[2];
     decibelsPerSecond += 50;
-    currentUpgradeCost[0] *= 1.2;
+    currentUpgradeCost[2] *= 1.15;
     upgradeButtonC.textContent = `Buy a bell (${
       item.C
     }): ${currentUpgradeCost[2].toFixed(2)} decibels`;
