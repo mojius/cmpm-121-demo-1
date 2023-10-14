@@ -1,16 +1,50 @@
 import "./style.css";
 
+interface Item {
+  name: string;
+  emoji: string;
+  button: HTMLButtonElement;
+  cost: number;
+  rate: number;
+  amount: number;
+}
+
+const items: Item[] = [
+  {
+    name: "clock",
+    emoji: "⏰",
+    button: document.createElement("button"),
+    cost: 10,
+    rate: 0.1,
+    amount: 0,
+  },
+  {
+    name: "pen",
+    emoji: "🖊",
+    button: document.createElement("button"),
+    cost: 100,
+    rate: 2,
+    amount: 0,
+  },
+  {
+    name: "bell",
+    emoji: "🔔",
+    button: document.createElement("button"),
+    cost: 1000,
+    rate: 50,
+    amount: 0,
+  },
+];
+
 const app: HTMLDivElement = document.querySelector("#app")!;
 
 let masterCounter: number = 0;
 let frameTime = 1;
 
-let decibelsPerSecond: number = 1.0;
+let decibelsPerSecond: number = 0;
 const baseClickIncrease: number = 1;
-const item = { A: 0, B: 0, C: 0 };
-const currentUpgradeCost: number[] = [10, 100, 1000];
 
-const gameName = "Noisemaker";
+const gameName = "🔊Noisemaker🔊";
 
 document.title = gameName;
 
@@ -22,7 +56,12 @@ subHeader.innerHTML = "<i>Don't worry, it's a silent game.</i>";
 const dpsText: HTMLHeadingElement = document.createElement("h3");
 
 app.append(header);
-app.append(dpsText);
+
+const decibelLevel: HTMLDivElement = document.createElement("h3");
+decibelLevel.textContent = getDecibelText();
+
+app.append(decibelLevel);
+
 app.append(subHeader);
 
 const mainButton: HTMLButtonElement = document.createElement("button"); // Look at me, all fancy with my typing!
@@ -31,91 +70,23 @@ mainButton.type = "button";
 mainButton.className = "buttonStyle";
 mainButton.textContent = "Make some noise!🔊⬆";
 
-const upgradeButtonA: HTMLButtonElement = document.createElement("button");
-upgradeButtonA.type = "button";
-upgradeButtonA.disabled = true;
-upgradeButtonA.textContent = `Buy a clock 🕰 (${item.A}): ${currentUpgradeCost[0]} decibels`;
-upgradeButtonA.addEventListener("click", onUpgradeClickedA);
-
-const upgradeButtonB: HTMLButtonElement = document.createElement("button");
-upgradeButtonB.type = "button";
-upgradeButtonB.disabled = true;
-upgradeButtonB.textContent = `Buy a pen 🖊 (${item.B}): ${currentUpgradeCost[1]} decibels`;
-upgradeButtonB.addEventListener("click", onUpgradeClickedB);
-
-const upgradeButtonC: HTMLButtonElement = document.createElement("button");
-upgradeButtonC.type = "button";
-upgradeButtonC.disabled = true;
-upgradeButtonC.textContent = `Buy a bell 🔔 (${item.C}): ${currentUpgradeCost[2]} decibels`;
-upgradeButtonC.addEventListener("click", onUpgradeClickedC);
-
-const decibelLevel: HTMLDivElement = document.createElement("div");
-decibelLevel.textContent = getDecibelText();
-
 mainButton.addEventListener("click", onMainClicked);
 
 app.append(mainButton);
 
-app.append(decibelLevel);
-
-app.append(upgradeButtonA);
-app.append(upgradeButtonB);
-app.append(upgradeButtonC);
+const div = document.createElement("div");
+app.append(div);
+createItemButtons(items);
+app.append(dpsText);
 
 startAutoDecibelIncrease();
 
 // Update loop
 setInterval(() => {
-  checkUpgradePrice(0, upgradeButtonA);
-  checkUpgradePrice(1, upgradeButtonB);
-  checkUpgradePrice(2, upgradeButtonC);
+  items.forEach((currentItem) => {
+    currentItem.button.disabled = currentItem.cost > masterCounter;
+  });
 }, frameTime);
-
-function checkUpgradePrice(num: number, button: HTMLButtonElement): boolean {
-  if (currentUpgradeCost[num] > masterCounter) {
-    button.disabled = true;
-    return false;
-  } else {
-    button.disabled = false;
-    return true;
-  }
-}
-
-function onUpgradeClickedA() {
-  if (checkUpgradePrice(0, upgradeButtonA)) {
-    item.A += 1;
-    masterCounter -= currentUpgradeCost[0];
-    decibelsPerSecond += 0.1;
-    currentUpgradeCost[0] *= 1.15;
-    upgradeButtonA.textContent = `Buy a clock 🕰 (${
-      item.A
-    }): ${currentUpgradeCost[0].toFixed(2)} decibels`;
-  }
-}
-
-function onUpgradeClickedB() {
-  if (checkUpgradePrice(1, upgradeButtonB)) {
-    item.B += 1;
-    masterCounter -= currentUpgradeCost[1];
-    decibelsPerSecond += 2;
-    currentUpgradeCost[1] *= 1.15;
-    upgradeButtonB.textContent = `Buy a pen 🖊 (${
-      item.B
-    }): ${currentUpgradeCost[1].toFixed(2)} decibels`;
-  }
-}
-
-function onUpgradeClickedC() {
-  if (checkUpgradePrice(2, upgradeButtonC)) {
-    item.C += 1;
-    masterCounter -= currentUpgradeCost[2];
-    decibelsPerSecond += 50;
-    currentUpgradeCost[2] *= 1.15;
-    upgradeButtonC.textContent = `Buy a bell 🔔 (${
-      item.C
-    }): ${currentUpgradeCost[2].toFixed(2)} decibels`;
-  }
-}
 
 function onMainClicked() {
   masterCounter += baseClickIncrease;
@@ -144,4 +115,31 @@ function startAutoDecibelIncrease() {
     previousFrameTime = performance.now();
     window.requestAnimationFrame(checkForCounterUpdate);
   }
+}
+
+function createItemButtons(items: Item[]) {
+  items.forEach((currentValue) => {
+    refreshItemText(currentValue);
+    currentValue.button.disabled = masterCounter < currentValue.cost;
+
+    currentValue.button.addEventListener("click", () => {
+      onUpgradeClicked(currentValue);
+    });
+    div.appendChild(currentValue.button);
+    div.append(document.createElement("div"));
+  });
+}
+
+function onUpgradeClicked(item: Item) {
+  if (item.cost <= masterCounter) {
+    masterCounter -= item.cost;
+    item.amount += 1;
+    item.cost *= Math.round(1.15);
+    decibelsPerSecond += item.rate;
+    refreshItemText(item);
+  }
+}
+
+function refreshItemText(item: Item) {
+  item.button.textContent = `${item.name} (${item.emoji}) [${item.amount}]: ${item.cost}`;
 }
