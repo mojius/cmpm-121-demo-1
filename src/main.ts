@@ -5,6 +5,7 @@ interface Item {
   desc: string;
   emoji: string;
   button: HTMLButtonElement;
+  subText: HTMLParagraphElement;
   cost: number;
   rate: number;
   amount: number;
@@ -16,6 +17,7 @@ const items: Item[] = [
     desc: "Tick, tock. The smallest amount of noise that can be annoying.",
     emoji: "⏰",
     button: document.createElement("button"),
+    subText: document.createElement("p"),
     cost: 10,
     rate: 0.1,
     amount: 0,
@@ -25,6 +27,7 @@ const items: Item[] = [
     desc: "click click click click",
     emoji: "🖊",
     button: document.createElement("button"),
+    subText: document.createElement("p"),
     cost: 100,
     rate: 2,
     amount: 0,
@@ -34,6 +37,7 @@ const items: Item[] = [
     desc: "Could even be the ringtone on someone's phone.",
     emoji: "🔔",
     button: document.createElement("button"),
+    subText: document.createElement("p"),
     cost: 1000,
     rate: 50,
     amount: 0,
@@ -43,6 +47,7 @@ const items: Item[] = [
     desc: "You shall not... brass!!",
     emoji: "📯",
     button: document.createElement("button"),
+    subText: document.createElement("p"),
     cost: 5000,
     rate: 200,
     amount: 0,
@@ -52,6 +57,7 @@ const items: Item[] = [
     desc: "There's a reason it's called a boomstick. Don't worry, no one's gonna get hurt. We're just shooting huge, extremely loud glass panes.",
     emoji: "🔫",
     button: document.createElement("button"),
+    subText: document.createElement("p"),
     cost: 10000,
     rate: 1000,
     amount: 0,
@@ -99,6 +105,11 @@ app.append(mainButton);
 const div = document.createElement("div");
 app.append(div);
 app.append(dpsText);
+
+const subDiv = document.createElement("div");
+subDiv.classList.add("specialDiv");
+app.append(subDiv);
+
 createItemButtons(items);
 
 startAutoDecibelIncrease();
@@ -141,19 +152,16 @@ function startAutoDecibelIncrease() {
 
 function createItemButtons(items: Item[]) {
   items.forEach((currentValue) => {
-    refreshItemText(currentValue);
     currentValue.button.disabled = masterCounter < currentValue.cost;
 
     currentValue.button.addEventListener("click", () => {
       onUpgradeClicked(currentValue);
     });
-    div.appendChild(currentValue.button);
-    div.appendChild(document.createElement("div"));
 
-    const subText = document.createElement("p");
-    subText.classList.add("desc");
-    subText.textContent = currentValue.desc;
-    div.appendChild(subText);
+    subDiv.appendChild(currentValue.button);
+    currentValue.subText.classList.add("desc");
+    currentValue.subText.textContent = currentValue.desc;
+    refreshItemText(currentValue);
   });
 }
 
@@ -161,12 +169,15 @@ function onUpgradeClicked(item: Item) {
   if (item.cost <= masterCounter) {
     masterCounter -= item.cost;
     item.amount += 1;
-    item.cost *= Math.round(1.15);
+    item.cost *= 1.15;
     decibelsPerSecond += item.rate;
     refreshItemText(item);
   }
 }
 
 function refreshItemText(item: Item) {
-  item.button.textContent = `${item.name} (${item.emoji}) [${item.amount}]: ${item.cost}`;
+  item.button.textContent = `${item.name} (${item.emoji}) [${
+    item.amount
+  }]: ${item.cost.toFixed(0)}`;
+  item.button.appendChild(item.subText);
 }
